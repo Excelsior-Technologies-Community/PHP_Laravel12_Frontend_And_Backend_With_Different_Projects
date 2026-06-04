@@ -16,5 +16,8 @@ Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])
 Route::get('/inquiry/read/{id}', [AdminController::class, 'markRead'])
     ->name('inquiry.read');
 
+Route::get('/inquiry/read-all', [AdminController::class, 'markAllRead'])
+    ->name('inquiry.readAll');
+    
 Route::get('/inquiry/delete/{id}', [AdminController::class, 'delete'])
     ->name('inquiry.delete');
