@@ -1,325 +1,140 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('backend.layout')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inquiry Dashboard</title>
+@section('title', 'Dashboard')
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+@section('page_title', 'Dashboard')
 
-    <style>
-        body {
-            background: #f4f6f9;
-        }
-
-        .header-card {
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
-            color: white;
-            border-radius: 20px;
-            padding: 25px;
-        }
-
-        .stat-card {
-            border: none;
-            border-radius: 15px;
-            transition: .3s;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .shadow-custom {
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        .table-container {
-            background: white;
-            border-radius: 20px;
-            padding: 20px;
-        }
-
-        .badge-status {
-            padding: 8px 12px;
-            font-size: 13px;
-        }
-
-        .pagination .page-link {
-            border-radius: 8px;
-            margin: 0 3px;
-        }
-
-        .pagination .page-item.active .page-link {
-            background: #4f46e5;
-            border-color: #4f46e5;
-        }
-
-        .search-box {
-            max-width: 500px;
-        }
-
-        .table td {
-            vertical-align: middle;
-        }
-    </style>
-</head>
-
-<body>
-
-    <div class="container py-4">
-
-        {{-- Header --}}
-        <div class="header-card shadow-custom mb-4">
-            <h2>
-                <i class="fas fa-chart-line"></i>
-                Inquiry Management Dashboard
-            </h2>
-            <p class="mb-0">
-                Monitor and manage customer inquiries.
-            </p>
+@section('content')
+    <div class="row g-4 mb-4">
+        <div class="col-lg-3 col-md-6">
+            <div class="glass-card p-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <p class="text-muted small mb-1">Total Inquiries</p>
+                        <h3 class="fw-bold mb-0">{{ $total }}</h3>
+                    </div>
+                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background: rgba(79, 70, 229, 0.1); color: #4f46e5;">
+                        <i class="fas fa-inbox fa-lg"></i>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        {{-- Statistics --}}
-        <div class="row mb-4">
-
-            <div class="col-lg-3 col-md-6 mb-3">
-                <div class="card stat-card bg-primary text-white">
-                    <div class="card-body">
-                        <h6>Total</h6>
-                        <h2>{{ $total }}</h2>
+        <div class="col-lg-3 col-md-6">
+            <div class="glass-card p-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <p class="text-muted small mb-1">Read</p>
+                        <h3 class="fw-bold mb-0">{{ $read }}</h3>
+                    </div>
+                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background: rgba(16, 185, 129, 0.1); color: #10b981;">
+                        <i class="fas fa-check-circle fa-lg"></i>
                     </div>
                 </div>
             </div>
-
-            <div class="col-lg-3 col-md-6 mb-3">
-                <div class="card stat-card bg-success text-white">
-                    <div class="card-body">
-                        <h6>Read</h6>
-                        <h2>{{ $read }}</h2>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6 mb-3">
-                <div class="card stat-card bg-warning">
-                    <div class="card-body">
-                        <h6>Unread</h6>
-                        <h2>{{ $unread }}</h2>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6 mb-3">
-                <div class="card stat-card bg-info text-white">
-                    <div class="card-body">
-                        <h6>Today</h6>
-                        <h2>{{ $today }}</h2>
-                    </div>
-                </div>
-            </div>
-
         </div>
-
-        {{-- Main Table --}}
-        <div class="table-container shadow-custom">
-
-            <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
-
-                <h4>
-                    <i class="fas fa-envelope"></i>
-                    Customer Inquiries
-                </h4>
-
-                <div class="d-flex gap-2 flex-wrap">
-
-                    {{-- Mark All Read --}}
-                    <a href="{{ route('inquiry.readAll') }}" class="btn btn-success btn-sm"
-                        onclick="return confirm('Mark all inquiries as read?')">
-                        <i class="fas fa-check-double"></i>
-                        Mark All Read
-                    </a>
-
-                    {{-- Search + Filter --}}
-                    <form method="GET" class="d-flex search-box gap-2">
-
-                        <input type="text" class="form-control" name="search" value="{{ request('search') }}"
-                            placeholder="Search name/email">
-
-                        <select name="status" class="form-control">
-                            <option value="">All</option>
-
-                            <option value="read" {{ request('status') == 'read' ? 'selected' : '' }}>
-                                Read
-                            </option>
-
-                            <option value="unread" {{ request('status') == 'unread' ? 'selected' : '' }}>
-                                Unread
-                            </option>
-                        </select>
-
-                        <button class="btn btn-primary">
-                            <i class="fas fa-search"></i>
-                        </button>
-
-                    </form>
-
+        <div class="col-lg-3 col-md-6">
+            <div class="glass-card p-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <p class="text-muted small mb-1">Unread</p>
+                        <h3 class="fw-bold mb-0">{{ $unread }}</h3>
+                    </div>
+                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background: rgba(245, 158, 11, 0.1); color: #f59e0b;">
+                        <i class="fas fa-clock fa-lg"></i>
+                    </div>
                 </div>
-
             </div>
-
-            <div class="table-responsive">
-
-                <table class="table table-hover table-bordered">
-
-                    <thead class="table-dark">
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Message</th>
-                            <th>Status</th>
-                            <th width="180">Actions</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-
-                        @forelse($inquiries as $key => $inquiry)
-
-                            <tr>
-
-                                <td>
-                                    {{ $inquiries->firstItem() + $key }}
-                                </td>
-
-                                <td>{{ $inquiry->name }}</td>
-
-                                <td>{{ $inquiry->email }}</td>
-
-                                <td>{{ $inquiry->phone }}</td>
-
-                                <td>
-                                    {{ \Illuminate\Support\Str::limit($inquiry->message, 80) }}
-                                </td>
-
-                                <td>
-                                    @if($inquiry->is_read)
-                                        <span class="badge bg-success">
-                                            Read
-                                        </span>
-                                    @else
-                                        <span class="badge bg-danger">
-                                            Unread
-                                        </span>
-                                    @endif
-                                </td>
-
-                                <td>
-
-                                    @if(!$inquiry->is_read)
-
-                                        <a href="{{ route('inquiry.read', $inquiry->id) }}" class="btn btn-success btn-sm">
-                                            <i class="fas fa-check"></i>
-                                        </a>
-
-                                    @endif
-
-                                    <a href="{{ route('inquiry.delete', $inquiry->id) }}" class="btn btn-danger btn-sm"
-                                        onclick="return confirm('Delete this inquiry?')">
-
-                                        <i class="fas fa-trash"></i>
-
-                                    </a>
-
-                                </td>
-
-                            </tr>
-
-                        @empty
-
-                            <tr>
-                                <td colspan="7" class="text-center">
-                                    No inquiries found
-                                </td>
-                            </tr>
-
-                        @endforelse
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-            {{-- Pagination Numbers Only --}}
-            @if($inquiries->lastPage() > 1)
-
-                <div class="d-flex justify-content-center mt-4">
-
-                    <nav>
-
-                        <ul class="pagination">
-
-                            @for($i = 1; $i <= $inquiries->lastPage(); $i++)
-
-                                <li class="page-item {{ $i == $inquiries->currentPage() ? 'active' : '' }}">
-
-                                    <a class="page-link" href="{{ $inquiries->appends(request()->query())->url($i) }}">
-
-                                        {{ $i }}
-
-                                    </a>
-
-                                </li>
-
-                            @endfor
-
-                        </ul>
-
-                    </nav>
-
-                </div>
-
-            @endif
-
         </div>
-
+        <div class="col-lg-3 col-md-6">
+            <div class="glass-card p-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <p class="text-muted small mb-1">Today</p>
+                        <h3 class="fw-bold mb-0">{{ $today }}</h3>
+                    </div>
+                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background: rgba(59, 130, 246, 0.1); color: #3b82f6;">
+                        <i class="fas fa-calendar-day fa-lg"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    {{-- jQuery --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <div class="glass-card p-4">
+        <div class="d-flex justify-content-between align-items-center flex-wrap mb-4 gap-3">
+            <h4 class="fw-bold mb-0"><i class="fas fa-envelope me-2" style="color: #4f46e5;"></i>Customer Inquiries</h4>
+            <div class="d-flex gap-2 flex-wrap">
+                <a href="{{ route('admin.inquiry.readAll') }}" class="btn btn-success btn-sm" onclick="return confirm('Mark all inquiries as read?')">
+                    <i class="fas fa-check-double me-1"></i>Mark All Read
+                </a>
+                <form method="GET" class="d-flex gap-2">
+                    <input type="text" class="form-control" name="search" value="{{ request('search') }}" placeholder="Search...">
+                    <select name="status" class="form-select">
+                        <option value="">All Status</option>
+                        <option value="read" {{ request('status') == 'read' ? 'selected' : '' }}>Read</option>
+                        <option value="unread" {{ request('status') == 'unread' ? 'selected' : '' }}>Unread</option>
+                    </select>
+                    <button class="btn btn-primary-custom"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+        </div>
 
-    {{-- Toastr --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Reference</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Subject</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Priority</th>
+                        <th>Date</th>
+                        <th width="180">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($inquiries as $inquiry)
+                        <tr>
+                            <td class="fw-semibold">{{ $inquiry->reference_number }}</td>
+                            <td>{{ $inquiry->name }}</td>
+                            <td>{{ $inquiry->email }}</td>
+                            <td>{{ $inquiry->subject }}</td>
+                            <td>{{ $inquiry->category->name ?? 'N/A' }}</td>
+                            <td>
+                                @if($inquiry->is_read)
+                                    <span class="badge bg-success">Read</span>
+                                @else
+                                    <span class="badge bg-danger">Unread</span>
+                                @endif
+                            </td>
+                            <td>{{ ucfirst($inquiry->priority) }}</td>
+                            <td>{{ $inquiry->created_at->format('M d, Y') }}</td>
+                            <td>
+                                @if(!$inquiry->is_read)
+                                    <a href="{{ route('admin.inquiry.read', $inquiry->id) }}" class="btn btn-success btn-sm">
+                                        <i class="fas fa-check"></i>
+                                    </a>
+                                @endif
+                                <a href="{{ route('admin.inquiry.delete', $inquiry->id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete?')">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="9" class="text-center py-4 text-muted">No inquiries found</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
 
-    <script>
-        toastr.options = {
-            closeButton: true,
-            progressBar: true,
-            newestOnTop: true,
-            preventDuplicates: true,
-            positionClass: "toast-top-right",
-            timeOut: "3000",
-            extendedTimeOut: "1000"
-        };
-    </script>
-
-    @if(session('success'))
-        <script>
-            toastr.success("{{ session('success') }}");
-        </script>
-    @endif
-
-    @if(session('error'))
-        <script>
-            toastr.error("{{ session('error') }}");
-        </script>
-    @endif
-
-</body>
-
-</html>
+        @if($inquiries->hasPages())
+            <div class="d-flex justify-content-center mt-4">
+                {{ $inquiries->links() }}
+            </div>
+        @endif
+    </div>
+@endsection
