@@ -81,7 +81,7 @@
                                         <button class="btn btn-sm btn-outline-primary edit-testimonial" data-id="{{ $testimonial->id }}" data-name="{{ $testimonial->name }}" data-position="{{ $testimonial->position }}" data-company="{{ $testimonial->company }}" data-message="{{ $testimonial->message }}" data-rating="{{ $testimonial->rating }}">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <form action="{{ route('admin.testimonials.delete', $testimonial->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this testimonial?')">
+                                        <form action="{{ route('admin.testimonials.destroy', $testimonial->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this testimonial?')">
                                             @csrf
                                             @method('DELETE')
                                             <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>

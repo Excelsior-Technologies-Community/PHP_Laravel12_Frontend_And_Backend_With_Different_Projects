@@ -73,7 +73,7 @@
                                         <button class="btn btn-sm btn-outline-primary edit-category" data-id="{{ $category->id }}" data-name="{{ $category->name }}" data-slug="{{ $category->slug }}" data-icon="{{ $category->icon }}" data-description="{{ $category->description }}" data-active="{{ $category->is_active }}">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <form action="{{ route('admin.categories.delete', $category->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this category?')">
+                                        <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this category?')">
                                             @csrf
                                             @method('DELETE')
                                             <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>

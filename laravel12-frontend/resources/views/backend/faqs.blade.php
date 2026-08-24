@@ -66,7 +66,7 @@
                                         <button class="btn btn-sm btn-outline-primary edit-faq" data-id="{{ $faq->id }}" data-question="{{ $faq->question }}" data-answer="{{ $faq->answer }}" data-category="{{ $faq->category_id }}" data-sort="{{ $faq->sort_order }}">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <form action="{{ route('admin.faqs.delete', $faq->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this FAQ?')">
+                                        <form action="{{ route('admin.faqs.destroy', $faq->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this FAQ?')">
                                             @csrf
                                             @method('DELETE')
                                             <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>

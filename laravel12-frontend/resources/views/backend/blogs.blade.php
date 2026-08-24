@@ -75,7 +75,7 @@
                                         <button class="btn btn-sm btn-outline-primary edit-blog" data-id="{{ $blog->id }}" data-title="{{ $blog->title }}" data-excerpt="{{ $blog->excerpt }}" data-content="{{ $blog->content }}" data-author="{{ $blog->author }}">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <form action="{{ route('admin.blogs.delete', $blog->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this blog?')">
+                                        <form action="{{ route('admin.blogs.destroy', $blog->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this blog?')">
                                             @csrf
                                             @method('DELETE')
                                             <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>

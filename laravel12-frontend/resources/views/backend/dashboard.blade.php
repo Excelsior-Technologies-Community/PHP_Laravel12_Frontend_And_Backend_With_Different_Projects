@@ -113,11 +113,11 @@
                             <td>{{ $inquiry->created_at->format('M d, Y') }}</td>
                             <td>
                                 @if(!$inquiry->is_read)
-                                    <a href="{{ route('inquiry.read', $inquiry->id) }}" class="btn btn-success btn-sm">
+                                    <a href="{{ route('admin.inquiry.read', $inquiry->id) }}" class="btn btn-success btn-sm">
                                         <i class="fas fa-check"></i>
                                     </a>
                                 @endif
-                                <a href="{{ route('inquiry.delete', $inquiry->id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete?')">
+                                <a href="{{ route('admin.inquiry.delete', $inquiry->id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete?')">
                                     <i class="fas fa-trash"></i>
                                 </a>
                             </td>
